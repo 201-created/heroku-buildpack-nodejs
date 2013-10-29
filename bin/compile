@@ -5,7 +5,7 @@ set -o pipefail   # don't ignore exit codes when piping output
 # set -x          # enable debugging
 
 # Configure directories
-build_dir=$1
+build_dir=$1/api
 cache_dir=$2
 bp_dir=$(cd $(dirname $0); cd ..; pwd)
 
@@ -98,7 +98,7 @@ fi
 # Update the PATH
 status "Building runtime environment"
 mkdir -p $build_dir/.profile.d
-echo "export PATH=\"\$HOME/vendor/node/bin:\$HOME/bin:\$HOME/node_modules/.bin:\$PATH\";" > $build_dir/.profile.d/nodejs.sh
+echo "export PATH=\"\$HOME/api/vendor/node/bin:\$HOME/api/bin:\$HOME/api/node_modules/.bin:\$PATH\";" > $build_dir/.profile.d/nodejs.sh
 
 # Post package.json to nomnom service
 # Use a subshell so failures won't break the build.
