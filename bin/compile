@@ -6,6 +6,7 @@ set -o pipefail   # don't ignore exit codes when piping output
 
 # Configure directories
 build_dir=$1/api
+procfile_path=$1/Procfile
 cache_dir=$2
 bp_dir=$(cd $(dirname $0); cd ..; pwd)
 
@@ -81,14 +82,14 @@ rm -rf "$build_dir/.node-gyp"
 rm -rf "$build_dir/.npm"
 
 # If Procfile is absent, try to create one using `npm start`
-if [ ! -e $build_dir/Procfile ]; then
+if [ ! -e $procfile_path ]; then
   npm_start=$(cat $build_dir/package.json | $bp_dir/vendor/jq -r .scripts.start)
 
   # If `scripts.start` is set in package.json, or a server.js file
   # is present in the app root, then create a default Procfile
   if [ "$npm_start" != "null" ] || [ -f $build_dir/server.js ]; then
     status "No Procfile found; Adding npm start to new Procfile"
-    echo "web: npm start" > $build_dir/Procfile
+    echo "web: npm start" > $procfile_path
   else
     status "Procfile not found and npm start script is undefined"
     protip "Create a Procfile or specify a start script in package.json"
